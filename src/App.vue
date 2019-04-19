@@ -5,7 +5,7 @@
 </template>
 
 <script>
-import ColorPicker  from './components/ColorPicker'
+import ColorPicker from './components/ColorPicker'
 
 export default {
   name: 'App',
@@ -14,9 +14,3 @@ export default {
   }
 }
 </script>
-
-<style>
-#app {
-  
-}
-</style>
