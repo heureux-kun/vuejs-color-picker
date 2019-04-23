@@ -1,18 +1,26 @@
 <template>
   <div id="ColorPicker">
-    <div id="SvAreaSelectPoint" v-bind:style="svAreaCursorPosition"></div>
-
-    <div id="SvArea" v-bind:style="setSvAreaBackgroundColor" @click="getSv">
-
+    <!-- 彩度と明度を決定するエリア -->
+    <div id="SvArea" v-bind:style="setSvAreaBackgroundColor" @click="getSv" v-model="hsvToRgb,rgbToHex">
+      <!-- カーソルの位置を意味する○ -->
+      <div id="SvAreaSelectPoint" v-bind:style="svAreaCursorPosition"></div>
     </div>
-    #{{ hexCode }}<br />
-    H：{{hsv.h}}° S：{{hsv.s}}% V：{{hsv.v}}% R：{{rgb.r}} G：{{rgb.g}} B：{{rgb.b}}
-    <div id="HArea" @click="getH">
 
+    <!-- 色相を決定するエリア -->
+    <div id="HArea" @click="getH" v-model="hsvToRgb,rgbToHex"></div>
+
+    <!-- 結果を表示するエリア -->
+    <div id="ResultArea">
+      <!--
+      hAreaCoordinateY:{{ hAreaCoordinateY }}<br />
+      degree:{{ hsv.h }}<br />
+      highBrightnessRgb: {{ highBrightnessRgb.r }},{{ highBrightnessRgb.g }},{{ highBrightnessRgb.b }}
+       -->
+      <!-- 選択した色を表示するエリア -->
+      <div id="SelectColorArea" v-bind:style="selectColor" ></div>
+      #{{ hexCode }}<br />
+      H：{{hsv.h}}° S：{{hsv.s}}% V：{{hsv.v}}% R：{{rgb.r}} G：{{rgb.g}} B：{{rgb.b}}
     </div>
-    hAreaCoordinateY:{{ hAreaCoordinateY }}<br />
-    degree:{{ hsv.h }}<br />
-    highBrightnessRgb: {{ highBrightnessRgb.r }},{{ highBrightnessRgb.g }},{{ highBrightnessRgb.b }}
   </div>
 </template>
 
@@ -35,9 +43,9 @@ export default {
         b: '-'
       },
       highBrightnessRgb: {
-        r: '-',
-        g: '-',
-        b: '-'
+        r: '255',
+        g: '0',
+        b: '0'
       },
       hexCode: ''
     }
@@ -50,6 +58,53 @@ export default {
       let x = this.svAreaCoordinateX - 6
       let y = this.svAreaCoordinateY + 6
       return 'left: ' + x + 'px;' + 'top: ' + y + 'px;'
+    },
+    selectColor: function () {
+      return 'background-color:rgb(' + this.rgb.r + ',' + this.rgb.g + ',' + this.rgb.b + ')'
+    },
+    hsvToRgb: function () {
+      // hsvToRgb
+      let H = this.hsv.h
+      let S = this.hsv.s / 100
+      let V = this.hsv.v / 100
+      let C = V * S
+      let Hp = H / 60
+      let X = C * (1 - Math.abs(Hp % 2 - 1))
+
+      let R, G, B
+      if (Hp >= 0 && Hp < 1) { [R, G, B] = [C, X, 0] };
+      if (Hp >= 1 && Hp < 2) { [R, G, B] = [X, C, 0] };
+      if (Hp >= 2 && Hp < 3) { [R, G, B] = [0, C, X] };
+      if (Hp >= 3 && Hp < 4) { [R, G, B] = [0, X, C] };
+      if (Hp >= 4 && Hp < 5) { [R, G, B] = [X, 0, C] };
+      if (Hp >= 5 && Hp <= 6) { [R, G, B] = [C, 0, X] };
+
+      let m = V - C;
+      [R, G, B] = [R + m, G + m, B + m]
+
+      R = Math.floor(R * 255)
+      G = Math.floor(G * 255)
+      B = Math.floor(B * 255)
+
+      this.rgb.r = R
+      this.rgb.g = G
+      this.rgb.b = B
+    },
+    rgbToHex: function () {
+      // rgbToHex
+      let rToHex = this.rgb.r.toString(16)
+      if (rToHex.length === 1) {
+        rToHex = '0' + rToHex
+      }
+      let gToHex = this.rgb.g.toString(16)
+      if (gToHex.length === 1) {
+        gToHex = '0' + gToHex
+      }
+      let bToHex = this.rgb.b.toString(16)
+      if (bToHex.length === 1) {
+        bToHex = '0' + bToHex
+      }
+      this.hexCode = (rToHex + gToHex + bToHex).toUpperCase()
     }
   },
   methods: {
@@ -88,33 +143,6 @@ export default {
       this.svAreaCoordinateY = e.offsetY
       this.hsv.s = Math.floor(this.svAreaCoordinateX / 300 * 100)
       this.hsv.v = 100 - Math.floor(this.svAreaCoordinateY / 300 * 100)
-
-      // hsvToRgb
-      let H = this.hsv.h
-      let S = this.hsv.s / 100
-      let V = this.hsv.v / 100
-      let C = V * S
-      let Hp = H / 60
-      let X = C * (1 - Math.abs(Hp % 2 - 1))
-
-      let R, G, B
-      if (Hp >= 0 && Hp < 1) { [R, G, B] = [C, X, 0] };
-      if (Hp >= 1 && Hp < 2) { [R, G, B] = [X, C, 0] };
-      if (Hp >= 2 && Hp < 3) { [R, G, B] = [0, C, X] };
-      if (Hp >= 3 && Hp < 4) { [R, G, B] = [0, X, C] };
-      if (Hp >= 4 && Hp < 5) { [R, G, B] = [X, 0, C] };
-      if (Hp >= 5 && Hp <= 6) { [R, G, B] = [C, 0, X] };
-
-      let m = V - C;
-      [R, G, B] = [R + m, G + m, B + m]
-
-      R = Math.floor(R * 255)
-      G = Math.floor(G * 255)
-      B = Math.floor(B * 255)
-
-      this.rgb.r = R
-      this.rgb.g = G
-      this.rgb.b = B
     }
   }
 }
@@ -122,6 +150,12 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
+  #ColorPicker{
+    display: flex;
+    background-color: #000;
+    padding: 10px;
+    color: #FFF;
+  }
   #SvAreaSelectPoint{
     width: 12px;
     height: 12px;
@@ -130,14 +164,24 @@ export default {
     position: relative;
   }
   #SvArea{
-    cursor: crosshair;
-    width: 300px;
+    flex-basis: 300px;
     height: 300px;
+    margin-right: 15px;
+    cursor: crosshair;
     background-image: linear-gradient(to bottom, transparent, #000000 ), linear-gradient(to right, #FFFFFF, transparent);
   }
   #HArea{
-    width: 100px;
+    flex-basis: 50px;
     height: 300px;
+    margin-right: 15px;
     background-image: linear-gradient( to top, rgb(255,0,0), rgb(255,255,0), rgb(0,255,0), rgb(0,255,255), rgb(0,0,255), rgb(255,0,255), rgb(255,0,0) );
   }
+  #ResultArea{
+    flex-basis: 200px;
+  }
+    #SelectColorArea{
+      width: 100px;
+      height: 100px;
+      border:1px solid #000;
+    }
 </style>
