@@ -1,25 +1,28 @@
 <template>
-  <div id="ColorPicker">
-    <!-- 彩度と明度を決定するエリア -->
-    <div id="SvArea" v-bind:style="setSvAreaBackgroundColor" @click="getSv" v-model="hsvToRgb,rgbToHex">
-      <!-- カーソルの位置を意味する○ -->
-      <div id="SvAreaSelectPoint" v-bind:style="svAreaCursorPosition"></div>
-    </div>
+  <div id="Wrapper">
+    <div id="ColorPicker">
+      <!-- 彩度と明度を決定するエリア -->
+      <div id="SvArea" v-bind:style="setSvAreaBackgroundColor" @click="getSv" v-model="hsvToRgb,rgbToHex">
+        <!-- カーソルの位置を意味する○ -->
+        <div id="SvAreaSelectPoint" v-bind:style="svAreaCursorStyle"></div>
+      </div>
 
-    <!-- 色相を決定するエリア -->
-    <div id="HArea" @click="getH" v-model="hsvToRgb,rgbToHex"></div>
+      <!-- 色相を決定するエリア -->
+      <div id="HArea" @click="getH" v-model="hsvToRgb,rgbToHex"></div>
 
-    <!-- 結果を表示するエリア -->
-    <div id="ResultArea">
-      <!--
-      hAreaCoordinateY:{{ hAreaCoordinateY }}<br />
-      degree:{{ hsv.h }}<br />
-      highBrightnessRgb: {{ highBrightnessRgb.r }},{{ highBrightnessRgb.g }},{{ highBrightnessRgb.b }}
-       -->
-      <!-- 選択した色を表示するエリア -->
-      <div id="SelectColorArea" v-bind:style="selectColor" ></div>
-      #{{ hexCode }}<br />
-      H：{{hsv.h}}° S：{{hsv.s}}% V：{{hsv.v}}% R：{{rgb.r}} G：{{rgb.g}} B：{{rgb.b}}
+      <!-- 結果を表示するエリア -->
+      <div id="ResultArea">
+        <!--
+        hAreaCoordinateY:{{ hAreaCoordinateY }}<br />
+        degree:{{ hsv.h }}<br />
+        highBrightnessRgb: {{ highBrightnessRgb.r }},{{ highBrightnessRgb.g }},{{ highBrightnessRgb.b }}
+        -->
+        <!-- 選択した色を表示するエリア -->
+        <div id="SelectColorArea" v-bind:style="selectColor" ></div>
+        #{{ hexCode }}<br />
+        H：{{hsv.h}}° S：{{hsv.s}}% V：{{hsv.v}}%<br />
+        R：{{rgb.r}} G：{{rgb.g}} B：{{rgb.b}}
+      </div>
     </div>
   </div>
 </template>
@@ -54,10 +57,16 @@ export default {
     setSvAreaBackgroundColor: function () {
       return 'background-color:rgb(' + this.highBrightnessRgb.r + ',' + this.highBrightnessRgb.g + ',' + this.highBrightnessRgb.b + ')'
     },
-    svAreaCursorPosition: function () {
+    svAreaCursorStyle: function () {
       let x = this.svAreaCoordinateX - 6
       let y = this.svAreaCoordinateY + 6
-      return 'left: ' + x + 'px;' + 'top: ' + y + 'px;'
+      let color
+      if (y < 150) {
+        color = '#000'
+      } else {
+        color = '#FFF'
+      }
+      return 'left: ' + x + 'px;' + 'top: ' + y + 'px;' + 'border-color: ' + color
     },
     selectColor: function () {
       return 'background-color:rgb(' + this.rgb.r + ',' + this.rgb.g + ',' + this.rgb.b + ')'
@@ -150,17 +159,20 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
+  #Wrapper{
+    padding:20px;
+    background-color: #000;
+  }
   #ColorPicker{
     display: flex;
-    background-color: #000;
-    padding: 10px;
     color: #FFF;
   }
   #SvAreaSelectPoint{
     width: 12px;
     height: 12px;
     border-radius: 12px;
-    border:1px solid #000;
+    border-style: solid;
+    border-width: 1px;
     position: relative;
   }
   #SvArea{
