@@ -59,7 +59,7 @@ export default {
     },
     svAreaCursorStyle: function () {
       let x = this.svAreaCoordinateX - 6
-      let y = this.svAreaCoordinateY + 6
+      let y = this.svAreaCoordinateY - 6
       let color
       if (y < 150) {
         color = '#000'
