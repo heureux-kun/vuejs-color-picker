@@ -24,10 +24,31 @@
         R：{{rgb.r}} G：{{rgb.g}} B：{{rgb.b}}
       </div>
     </div>
+    <div id="GrayScale">
+      <ul>
+        <li :style="grayScaleStyle01">{{ grayScaleHex01 }}</li>
+        <li :style="grayScaleStyle02"></li>
+        <li :style="grayScaleStyle03"></li>
+        <li :style="grayScaleStyle04"></li>
+        <li :style="grayScaleStyle05"></li>
+        <li :style="grayScaleStyle06"></li>
+        <li :style="grayScaleStyle07"></li>
+        <li :style="grayScaleStyle08"></li>
+        <li :style="grayScaleStyle09"></li>
+        <li :style="grayScaleStyle10"></li>
+        <li :style="grayScaleStyle11"></li>
+      </ul>
+    </div>
+    <!-- Target -->
+    <input id="foo" value="https://github.com/zenorocha/clipboard.js.git">
+    <!-- Trigger -->
+    <button class="btn" data-clipboard-target="#foo">クリック</button>
   </div>
 </template>
 
 <script>
+import clipboard from 'clipboard'
+
 export default {
   name: 'ColorPicker',
   data () {
@@ -50,7 +71,20 @@ export default {
         g: '0',
         b: '0'
       },
-      hexCode: ''
+      hexCode: '',
+      grayScale: {
+        color01: 0,
+        color02: 26,
+        color03: 51,
+        color04: 77,
+        color05: 102,
+        color06: 128,
+        color07: 153,
+        color08: 179,
+        color09: 201,
+        color10: 230,
+        color11: 255
+      }
     }
   },
   computed: {
@@ -114,6 +148,50 @@ export default {
         bToHex = '0' + bToHex
       }
       this.hexCode = (rToHex + gToHex + bToHex).toUpperCase()
+    },
+    grayScaleStyle01: function () {
+      let color = this.grayScale.color01
+      return 'background-color:rgb(' + color + ',' + color + ',' + color + ')'
+    },
+    grayScaleStyle02: function () {
+      let color = this.grayScale.color02
+      return 'background-color:rgb(' + color + ',' + color + ',' + color + ')'
+    },
+    grayScaleStyle03: function () {
+      let color = this.grayScale.color03
+      return 'background-color:rgb(' + color + ',' + color + ',' + color + ')'
+    },
+    grayScaleStyle04: function () {
+      let color = this.grayScale.color04
+      return 'background-color:rgb(' + color + ',' + color + ',' + color + ')'
+    },
+    grayScaleStyle05: function () {
+      let color = this.grayScale.color05
+      return 'background-color:rgb(' + color + ',' + color + ',' + color + ')'
+    },
+    grayScaleStyle06: function () {
+      let color = this.grayScale.color06
+      return 'background-color:rgb(' + color + ',' + color + ',' + color + ')'
+    },
+    grayScaleStyle07: function () {
+      let color = this.grayScale.color07
+      return 'background-color:rgb(' + color + ',' + color + ',' + color + ')'
+    },
+    grayScaleStyle08: function () {
+      let color = this.grayScale.color08
+      return 'background-color:rgb(' + color + ',' + color + ',' + color + ')'
+    },
+    grayScaleStyle09: function () {
+      let color = this.grayScale.color09
+      return 'background-color:rgb(' + color + ',' + color + ',' + color + ')'
+    },
+    grayScaleStyle10: function () {
+      let color = this.grayScale.color10
+      return 'background-color:rgb(' + color + ',' + color + ',' + color + ')'
+    },
+    grayScaleStyle11: function () {
+      let color = this.grayScale.color11
+      return 'background-color:rgb(' + color + ',' + color + ',' + color + ')'
     }
   },
   methods: {
@@ -191,9 +269,19 @@ export default {
   #ResultArea{
     flex-basis: 200px;
   }
-    #SelectColorArea{
-      width: 100px;
-      height: 100px;
-      border:1px solid #000;
-    }
+  #SelectColorArea{
+    width: 100px;
+    height: 100px;
+    border:1px solid #000;
+  }
+  #GrayScale{
+    margin-top: 20px;
+  }
+  #GrayScale ul{
+    display: flex;
+  }
+  #GrayScale li{
+    width: 30px;
+    height: 30px;
+  }
 </style>
