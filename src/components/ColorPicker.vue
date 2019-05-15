@@ -1,6 +1,7 @@
 <template>
   <div id="Wrapper">
     <div id="ColorPicker">
+      <div id="GrayScaleArea" @click="getGrayScale"></div>
       <!-- 彩度と明度を決定するエリア -->
       <div id="SvArea" v-bind:style="setSvAreaBackgroundColor" @click="getSv" v-model="hsvToRgb,rgbToHex">
         <!-- カーソルの位置を意味する○ -->
@@ -24,31 +25,10 @@
         R：{{rgb.r}} G：{{rgb.g}} B：{{rgb.b}}
       </div>
     </div>
-    <div id="GrayScale">
-      <ul>
-        <li :style="grayScaleStyle01">{{ grayScaleHex01 }}</li>
-        <li :style="grayScaleStyle02"></li>
-        <li :style="grayScaleStyle03"></li>
-        <li :style="grayScaleStyle04"></li>
-        <li :style="grayScaleStyle05"></li>
-        <li :style="grayScaleStyle06"></li>
-        <li :style="grayScaleStyle07"></li>
-        <li :style="grayScaleStyle08"></li>
-        <li :style="grayScaleStyle09"></li>
-        <li :style="grayScaleStyle10"></li>
-        <li :style="grayScaleStyle11"></li>
-      </ul>
-    </div>
-    <!-- Target -->
-    <input id="foo" value="https://github.com/zenorocha/clipboard.js.git">
-    <!-- Trigger -->
-    <button class="btn" data-clipboard-target="#foo">クリック</button>
   </div>
 </template>
 
 <script>
-import clipboard from 'clipboard'
-
 export default {
   name: 'ColorPicker',
   data () {
@@ -71,20 +51,7 @@ export default {
         g: '0',
         b: '0'
       },
-      hexCode: '',
-      grayScale: {
-        color01: 0,
-        color02: 26,
-        color03: 51,
-        color04: 77,
-        color05: 102,
-        color06: 128,
-        color07: 153,
-        color08: 179,
-        color09: 201,
-        color10: 230,
-        color11: 255
-      }
+      hexCode: ''
     }
   },
   computed: {
@@ -148,50 +115,6 @@ export default {
         bToHex = '0' + bToHex
       }
       this.hexCode = (rToHex + gToHex + bToHex).toUpperCase()
-    },
-    grayScaleStyle01: function () {
-      let color = this.grayScale.color01
-      return 'background-color:rgb(' + color + ',' + color + ',' + color + ')'
-    },
-    grayScaleStyle02: function () {
-      let color = this.grayScale.color02
-      return 'background-color:rgb(' + color + ',' + color + ',' + color + ')'
-    },
-    grayScaleStyle03: function () {
-      let color = this.grayScale.color03
-      return 'background-color:rgb(' + color + ',' + color + ',' + color + ')'
-    },
-    grayScaleStyle04: function () {
-      let color = this.grayScale.color04
-      return 'background-color:rgb(' + color + ',' + color + ',' + color + ')'
-    },
-    grayScaleStyle05: function () {
-      let color = this.grayScale.color05
-      return 'background-color:rgb(' + color + ',' + color + ',' + color + ')'
-    },
-    grayScaleStyle06: function () {
-      let color = this.grayScale.color06
-      return 'background-color:rgb(' + color + ',' + color + ',' + color + ')'
-    },
-    grayScaleStyle07: function () {
-      let color = this.grayScale.color07
-      return 'background-color:rgb(' + color + ',' + color + ',' + color + ')'
-    },
-    grayScaleStyle08: function () {
-      let color = this.grayScale.color08
-      return 'background-color:rgb(' + color + ',' + color + ',' + color + ')'
-    },
-    grayScaleStyle09: function () {
-      let color = this.grayScale.color09
-      return 'background-color:rgb(' + color + ',' + color + ',' + color + ')'
-    },
-    grayScaleStyle10: function () {
-      let color = this.grayScale.color10
-      return 'background-color:rgb(' + color + ',' + color + ',' + color + ')'
-    },
-    grayScaleStyle11: function () {
-      let color = this.grayScale.color11
-      return 'background-color:rgb(' + color + ',' + color + ',' + color + ')'
     }
   },
   methods: {
@@ -230,6 +153,35 @@ export default {
       this.svAreaCoordinateY = e.offsetY
       this.hsv.s = Math.floor(this.svAreaCoordinateX / 300 * 100)
       this.hsv.v = 100 - Math.floor(this.svAreaCoordinateY / 300 * 100)
+    },
+    getGrayScale: function (e) {
+      let grayScaleAreaCoordinateY = e.offsetY
+      this.hsv.h = 360
+      this.hsv.s = 0
+      let normalizeY = 110 - Math.floor(grayScaleAreaCoordinateY / 300 * 110)
+      if (normalizeY > 100) {
+        this.hsv.v = 100
+      } else if (normalizeY > 90) {
+        this.hsv.v = 90
+      } else if (normalizeY > 80) {
+        this.hsv.v = 80
+      } else if (normalizeY > 70) {
+        this.hsv.v = 70
+      } else if (normalizeY > 60) {
+        this.hsv.v = 60
+      } else if (normalizeY > 50) {
+        this.hsv.v = 50
+      } else if (normalizeY > 40) {
+        this.hsv.v = 40
+      } else if (normalizeY > 30) {
+        this.hsv.v = 30
+      } else if (normalizeY > 20) {
+        this.hsv.v = 20
+      } else if (normalizeY > 10) {
+        this.hsv.v = 10
+      } else {
+        this.hsv.v = 0
+      }
     }
   }
 }
@@ -238,12 +190,18 @@ export default {
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
   #Wrapper{
-    padding:20px;
+    padding: 20px;
     background-color: #000;
   }
   #ColorPicker{
     display: flex;
     color: #FFF;
+  }
+  #GrayScaleArea{
+    width: 30px;
+    height: 300px;
+    margin-right: 20px;
+    background-image: linear-gradient(to bottom, #FFFFFF, #000000 );
   }
   #SvAreaSelectPoint{
     width: 12px;
@@ -273,15 +231,5 @@ export default {
     width: 100px;
     height: 100px;
     border:1px solid #000;
-  }
-  #GrayScale{
-    margin-top: 20px;
-  }
-  #GrayScale ul{
-    display: flex;
-  }
-  #GrayScale li{
-    width: 30px;
-    height: 30px;
   }
 </style>
